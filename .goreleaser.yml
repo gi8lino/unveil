@@ -1,0 +1,71 @@
+---
+project_name: unveil
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - id: unveil
+    main: ./cmd/unveil/main.go
+    binary: unveil
+    env: [CGO_ENABLED=0]
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+    ldflags:
+      - -s -w
+      - -X main.Version={{ .Tag }}
+      - -X main.Commit={{ .FullCommit }}
+dockers:
+  - ids: [unveil] # tie this docker image to the 'unveil' build
+    use: buildx
+    dockerfile: Dockerfile.goreleaser
+    image_templates:
+      - ghcr.io/gi8lino/unveil:{{ .Tag }}-amd64
+    build_flag_templates:
+      - --pull
+      - --platform=linux/amd64
+      - --build-arg
+      - LDFLAGS=-s -w -X main.Version={{ .Tag }} -X main.Commit={{ .FullCommit }}
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/gi8lino/unveil
+      - --label=org.opencontainers.image.source=https://github.com/gi8lino/unveil
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses="GNU General Public License v3.0"
+
+  - ids: [unveil]
+    use: buildx
+    dockerfile: Dockerfile.goreleaser
+    image_templates:
+      - ghcr.io/gi8lino/unveil:{{ .Tag }}-arm64
+    build_flag_templates:
+      - --pull
+      - --platform=linux/arm64
+      - --build-arg
+      - LDFLAGS=-s -w -X main.Version={{ .Tag }} -X main.Commit={{ .FullCommit }}
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description={{ .ProjectName }}
+      - --label=org.opencontainers.image.url=https://github.com/gi8lino/unveil
+      - --label=org.opencontainers.image.source=https://github.com/gi8lino/unveil
+      - --label=org.opencontainers.image.version={{ .Version }}
+      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+      - --label=org.opencontainers.image.revision={{ .FullCommit }}
+      - --label=org.opencontainers.image.licenses="GNU General Public License v3.0"
+
+docker_manifests:
+  - name_template: ghcr.io/gi8lino/unveil:{{ .Tag }}
+    image_templates:
+      - ghcr.io/gi8lino/unveil:{{ .Tag }}-amd64
+      - ghcr.io/gi8lino/unveil:{{ .Tag }}-arm64
+  - name_template: ghcr.io/gi8lino/unveil:latest
+    image_templates:
+      - ghcr.io/gi8lino/unveil:{{ .Tag }}-amd64
+      - ghcr.io/gi8lino/unveil:{{ .Tag }}-arm64
+
+archives:
+  - formats: ["tar.gz"]
+
+checksum:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+  algorithm: sha256
