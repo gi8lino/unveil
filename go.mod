@@ -3,7 +3,7 @@ module github.com/gi8lino/unveil
 go 1.25.0
 
 require (
-	github.com/containeroo/resolver v0.3.0
+	github.com/containeroo/resolver v0.3.1
 	github.com/containeroo/tinyflags v0.0.49
 	github.com/stretchr/testify v1.11.1
 )
