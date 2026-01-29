@@ -149,7 +149,7 @@ func TestRun_ParseError_MissingRequired(t *testing.T) {
 		var out bytes.Buffer
 		err := Run("v", "c", args, &out)
 		require.Error(t, err)
-		assert.EqualError(t, err, "unknown dynamic group: unknown\nunknown dynamic group: unknown\nunknown dynamic group: unknown")
+		assert.EqualError(t, err, "unknown dynamic group \"unknown\" in flag --unknown.a.path=unknown.txt\nunknown dynamic group \"unknown\" in flag --unknown.a.select=k\nunknown dynamic group \"unknown\" in flag --unknown.a.as=K")
 	})
 
 	t.Run("Write output to file", func(t *testing.T) {
