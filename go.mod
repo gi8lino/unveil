@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/containeroo/resolver v0.6.1
-	github.com/containeroo/tinyflags v0.12.0
+	github.com/containeroo/tinyflags v0.13.0
 	github.com/stretchr/testify v1.12.1
 )
 
